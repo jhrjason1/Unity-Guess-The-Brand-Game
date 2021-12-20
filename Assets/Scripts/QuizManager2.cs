@@ -30,6 +30,15 @@ public class QuizManager2 : MonoBehaviour
     public GameObject LosePanel;
     public GameManager2 gameManager;
     public CoinSystem coins;
+    public Text TextTimer;
+    public float Waktu = 10;
+    public bool GameAktif = true;
+    public GameObject CanvasWaktuHabis;
+
+    public AudioSource win;
+    public AudioSource lose;
+    public AudioSource erase;
+    public AudioSource answer;
 
     private void Awake(){
         if(instance == null) instance = this;
@@ -77,6 +86,7 @@ public class QuizManager2 : MonoBehaviour
 
         selectedWordIndex.Add(wordData.transform.GetSiblingIndex());
         answerWordArray[currentAnswerIndex].SetWord(wordData.wordValue);
+        answer.Play();
         wordData.gameObject.SetActive(false);
         currentAnswerIndex++;
 
@@ -93,11 +103,15 @@ public class QuizManager2 : MonoBehaviour
             if(correctAnswer){
                 Debug.Log("Your answer is correct !");
                 WinPanel.SetActive(true);
+                win.Play();
                 gameManager.WinLevel2();
                 coins.CoinUpdate();
+                GameAktif = false;
             }else if(!correctAnswer){
                 Debug.Log("Your answer is incorrect, please try again !");
                 LosePanel.SetActive(true);
+                lose.Play();
+                GameAktif = false;
             }
         }
     }
@@ -127,8 +141,45 @@ public class QuizManager2 : MonoBehaviour
             selectedWordIndex.RemoveAt(selectedWordIndex.Count -1);
             currentAnswerIndex--;
             answerWordArray[currentAnswerIndex].SetWord('_');
+            erase.Play();
         }
         
+    }
+
+    void SetText()
+    {
+        int Menit = Mathf.FloorToInt(Waktu / 60);
+        int Detik = Mathf.FloorToInt(Waktu % 60);
+        TextTimer.text = Menit.ToString("00") + ":" + Detik.ToString("00");
+    }
+
+    float s;
+
+    void Update()
+    {
+        if(GameAktif)
+        {
+            s += Time.deltaTime;
+            if(s >= 1)
+            {
+                Waktu--;
+                s = 0;
+            }
+        }
+        if(GameAktif && Waktu <= 0)
+        {
+            Debug.Log("Stage Failed");
+            CanvasWaktuHabis.SetActive(true);
+            lose.Play();
+            GameAktif = false;
+        }   
+        SetText();
+    }
+
+    public void ResetTimer(){
+        Waktu = 15;
+        SetText();
+        GameAktif = true;
     }
 }
 

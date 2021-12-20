@@ -13,10 +13,12 @@ public class LevelSelection : MonoBehaviour
     public GameObject NotificationPanel2;
     public int lockbutton = 1;
     public int level = 1;
-
+    public AudioSource error;
+    public AudioSource unlock;
     // Start is called before the first frame update
     void Start()
     {
+
         int level = PlayerPrefs.GetInt("levelAt");
         PlayerPrefs.SetInt("levelAt", level);
         //int unlock = PlayerPrefs.GetInt("unlock", 0);
@@ -57,13 +59,15 @@ public class LevelSelection : MonoBehaviour
     }
 
     public void Level2Update(){
-
         if(PlayerPrefs.GetInt("levelDi") == 5 && PlayerPrefs.GetInt("Coins") >= 500){
             lvlButtons[1].interactable = true;
+            unlock.Play();
             coins.CoinMin();
             BaseLevelUp();
         }else{
             NotificationPanel.SetActive(true);
+            //error = GetComponent<AudioSource>();
+            error.Play();
             //PlayerPrefs.SetInt("unlock", 0);
             unlockButton1[0].interactable = true;
         }
@@ -73,11 +77,14 @@ public class LevelSelection : MonoBehaviour
 
         if(PlayerPrefs.GetInt("levelSekarang") == 5 && PlayerPrefs.GetInt("Coins") >= 500){
             lvlButtons[2].interactable = true;
+            unlock.Play();
             coins.CoinMin();
             lockbutton = lockbutton + 1;
             BaseLevelUp();
         }else{
             NotificationPanel2.SetActive(true);
+            //error = GetComponent<AudioSource>();
+            error.Play();
             //PlayerPrefs.SetInt("unlock", 0);
             unlockButton2[0].interactable = true;
         }

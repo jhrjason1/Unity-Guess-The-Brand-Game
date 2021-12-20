@@ -33,6 +33,8 @@ public class Hint : MonoBehaviour
     public CoinSystem coins;
     public GameObject Cointidakcukup;
     public Button[] hintButtons;
+    public AudioSource hint;
+    public AudioSource error;
     // Start is called before the first frame update
     void Start() {
         image1.enabled = false;    
@@ -67,9 +69,11 @@ public class Hint : MonoBehaviour
             image24.gameObject.SetActive(false);
             image25.gameObject.SetActive(false);
             coins.HintBuy();
+            hint.Play();
             hintButtons[0].interactable = false;
         }else{
             Cointidakcukup.SetActive(true);
+            error.Play();
         }       
     }
 }
